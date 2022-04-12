@@ -1,0 +1,32 @@
+"""Recursively walk a directory with os.walk."""
+
+import os
+import hashlib
+import datetime
+import hashlib
+import json
+'''the recursive walk shell taken primarily from github: https://gist.github.com/seanh/81152'''
+base_dir = '/' # The directory to walk
+skipList = ['/dev', '/proc','/run', '/sys','/tmp','/var/lib', '/var/run']
+output={}
+for root, dirs, files in os.walk(base_dir):
+    if root in skipList:
+        continue
+    #print('root: ',root)
+    #print('   dirs:')
+    for d in dirs:
+        #print('      ',d)
+    #print('   files:')
+        dt = datetime.datetime.now()
+    for f in files:         #this is the files I actually want to hash and store
+        try:
+            readIn = open(f, mode='r')
+            text = readIn.read()
+            readIn.close()
+            h = hashlib.sha256(text.encode('utf-8')).hexdigest()
+            path = root+d+f
+            output[path]= [h,dt]
+            #print('      ',f)
+        except:
+            pass#for now
+print(output)
